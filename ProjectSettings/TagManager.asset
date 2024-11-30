@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Slope
   layers:
   - Default
   - TransparentFX
@@ -11,10 +12,10 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Solids
+  - Boundary
+  - Enemy
   - 
   - 
   - 
@@ -40,4 +41,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3633049693
+    locked: 0
+  - name: Ground
+    uniqueID: 666992857
+    locked: 0
+  - name: Enemy
+    uniqueID: 2741822729
+    locked: 0
+  - name: Player
+    uniqueID: 2517520905
     locked: 0
