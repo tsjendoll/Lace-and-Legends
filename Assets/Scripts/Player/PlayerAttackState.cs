@@ -12,6 +12,7 @@ public class PlayerAttackState : PlayerState
     {
         
         base.Enter();
+        xInput = 0;
 
         float attackDir = player.facingDir;
 

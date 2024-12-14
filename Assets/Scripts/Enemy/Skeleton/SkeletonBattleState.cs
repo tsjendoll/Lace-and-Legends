@@ -34,12 +34,10 @@ public class SkeletonBattleState : EnemyState
         base.Update();
 
 
-        if (enemy.IsPlayerDetected() && !PlayerHidden())
+        if (enemy.IsPlayerDetected())
         {
 
             stateTimer = enemy.battleTime;
-            Debug.Log("Battle Time Reset");
-
 
             if (enemy.IsPlayerDetected().distance < enemy.attackDistance)
             {
@@ -49,12 +47,15 @@ public class SkeletonBattleState : EnemyState
         }
         else
         {
+
             if (stateTimer < 0 || Vector2.Distance(enemy.transform.position, player.position) > 10)
                 stateMachine.ChangeState(enemy.idleState);
         }
 
-        MoveTowardsPlayer();
-        
+        if(enemy.IsPlayerDetected().distance > enemy.attackDistance || !enemy.IsPlayerDetected())
+
+            MoveTowardsPlayer();
+
     }
 
     private void MoveTowardsPlayer()

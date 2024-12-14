@@ -10,4 +10,19 @@ public class PlayerAnimationTriggers : MonoBehaviour
     {
         player.AnimationTrigger();
     }
+
+    private void AttackTrigger()
+    {
+        Collider2D[] colliders = player.GetFilteredColliders(player.attachCheck.position, player.attackCheckRadius, player.facingDir);
+
+        foreach(var hit in colliders)
+        {
+            if(hit.GetComponent<Enemy>() != null)
+                hit.GetComponent<Enemy>().Damage(player.facingDir);
+        }
+    
+    }
+
+    
+
 }

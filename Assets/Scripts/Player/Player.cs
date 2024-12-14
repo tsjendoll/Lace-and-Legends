@@ -6,8 +6,10 @@ using UnityEngine;
 public class Player : Entity
 {
 
-    [Header("ATtack Details")]
+    [Header("Attack Details")]
     public Vector2 attackMovement;
+    public float CounterAttackDuration = .2f;
+
     
     [Header("Move Info")]
     public float walkSpeed;
@@ -15,6 +17,7 @@ public class Player : Entity
     public float jumpForce;
     public bool coyoteTime = true;
     public float coyoteTimeDuration;
+    [HideInInspector]
     public bool doubleJump = true;
 
     #region Components
@@ -34,6 +37,7 @@ public class Player : Entity
     public PlayerAirState airState { get; private set; }
     
     public PlayerAttackState attackState {get; private set; }
+    public PlayerCounterAttackState counterAttackState { get; private set; }
 
     #endregion
 
@@ -49,6 +53,7 @@ public class Player : Entity
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
         airState = new PlayerAirState(this, stateMachine, "Jump");
         attackState = new PlayerAttackState(this, stateMachine, "Attack");
+        counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
     }
 
     protected override void Start()
@@ -70,4 +75,37 @@ public class Player : Entity
     }
 
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+
+    /// <summary>
+    /// Returns an array of colliders within a specified circle, filtered by the player's facing direction.
+    /// </summary>
+    /// <param name="position">The center position of the circle.</param>
+    /// <param name="radius">The radius of the circle.</param>
+    /// <param name="facingDir">
+    /// The direction the player is facing:
+    /// <list type="bullet">
+    /// <item><description>1 for right</description></item>
+    /// <item><description>-1 for left</description></item>
+    /// </list>
+    /// </param>
+    /// <returns>An array of colliders within the specified half of the circle based on the facing direction.</returns>
+    public Collider2D[] GetFilteredColliders(Vector2 position, float radius, int facingDir)
+    {
+        Collider2D[] allColliders = Physics2D.OverlapCircleAll(position, radius);
+        List<Collider2D> filteredColliders = new List<Collider2D>();
+
+        foreach (Collider2D collider in allColliders)
+        {
+            float relativeX = collider.transform.position.x - position.x;
+
+            // Filter based on the facing direction
+            if ((facingDir == -1 && relativeX <= 0) ||  // Left half if facing left
+                (facingDir == 1 && relativeX >= 0))     // Right half if facing right
+            {
+                filteredColliders.Add(collider);
+            }
+        }
+
+        return filteredColliders.ToArray();
+    }
 }

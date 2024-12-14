@@ -21,7 +21,7 @@ public class Enemy : Entity
     public float battleTime;
     private float defaultMoveSpeed;
 
-    [Header("ATtack Info")]
+    [Header("Attack Info")]
     public float attackDistance;
     public float attackCooldown;
     public float minAttackCooldown;

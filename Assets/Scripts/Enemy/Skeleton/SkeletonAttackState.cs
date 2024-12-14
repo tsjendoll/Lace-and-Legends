@@ -19,7 +19,7 @@ public class SkeletonAttackState : EnemyState
     public override void Update()
     {
         base.Update();
-
+        
         enemy.setZeroVelocity();
 
         if (triggerCalled)

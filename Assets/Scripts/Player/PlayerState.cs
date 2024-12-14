@@ -14,6 +14,7 @@ public class PlayerState
 
     protected float stateTimer;
     protected bool triggerCalled;
+    
 
     public PlayerState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName)
     {

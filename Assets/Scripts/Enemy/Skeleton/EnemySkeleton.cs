@@ -10,7 +10,7 @@ public class EnemySkeleton : Enemy
     public SkeletonMoveState moveState { get; private set; }
     public SkeletonBattleState battleState { get; private set;}
     public SkeletonAttackState attackState { get; private set; }
-    // public SkeletonStunnedState stunnedState { get; private set; }
+    public SkeletonStunnedState stunnedState { get; private set; }
     // public SkeletonDeadState deadState { get; private set; }
     #endregion
 
@@ -22,7 +22,7 @@ public class EnemySkeleton : Enemy
         moveState = new SkeletonMoveState(this, stateMachine, "Move", this);
         battleState = new SkeletonBattleState(this, stateMachine, "Move", this);
         attackState = new SkeletonAttackState(this, stateMachine, "Attack", this);
-        // stunnedState = new SkeletonStunnedState(this, stateMachine, "Stunned", this);
+        stunnedState = new SkeletonStunnedState(this, stateMachine, "Stun", this);
         // deadState = new SkeletonDeadState(this, stateMachine, "Idle", this);
     }
 
@@ -35,18 +35,21 @@ public class EnemySkeleton : Enemy
     protected override void Update()
     {
         base.Update();
+
+        if(Input.GetKeyDown(KeyCode.U))
+            stateMachine.ChangeState(stunnedState); 
     }
 
-    // public override bool CanBeStunned()
-    // {
-    //     if (base.CanBeStunned())
-    //     {
-    //         stateMachine.ChangeState(stunnedState);
-    //         return true;
-    //     }
+    public override bool CanBeStunned()
+    {
+        if (base.CanBeStunned())
+        {
+            stateMachine.ChangeState(stunnedState);
+            return true;
+        }
 
-    //     return false;
-    // }
+        return false;
+    }
 
     // public override void Die()
     // {
