@@ -17,11 +17,20 @@ public class Player : Entity
     public float jumpForce;
     public bool coyoteTime = true;
     public float coyoteTimeDuration;
-    [HideInInspector]
-    public bool doubleJump = true;
+
+    public int jumpCount = 0;
+    public int airDashCount = 0;
+
+    [Header("Dash Info")]
+    public float dashDuration;
+    public float dashSpeed;
+    public float dashDir { get; private set; }
+
+    [Header("Clothing Info")]
+    public bool IsCorsetActive = true;
 
     #region Components
-    
+    public SkillManager skill { get; private set; }
     public Animator playerAnimator {get; private set; }
     public Animator topAnimator {get; private set; }
     public Animator bottomAnimator {get; private set; }
@@ -35,7 +44,7 @@ public class Player : Entity
     public PlayerRunState runState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
-    
+    public PlayerDashState dashState { get; private set; }
     public PlayerAttackState attackState {get; private set; }
     public PlayerCounterAttackState counterAttackState { get; private set; }
 
@@ -52,6 +61,7 @@ public class Player : Entity
         runState = new PlayerRunState(this, stateMachine, "Run");
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
         airState = new PlayerAirState(this, stateMachine, "Jump");
+        dashState = new PlayerDashState(this, stateMachine, "Run");
         attackState = new PlayerAttackState(this, stateMachine, "Attack");
         counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
     }
@@ -61,9 +71,10 @@ public class Player : Entity
         base.Start();
 
         stateMachine.Initialize(idleState);
-        playerAnimator = GameObject.Find("PlayerAnimator").GetComponent<Animator>();
-        topAnimator = GameObject.Find("Top").GetComponent<Animator>();
-        bottomAnimator = GameObject.Find("Bottom").GetComponent<Animator>();
+        skill = SkillManager.instance;
+        playerAnimator = PlayerManager.instance.playerAnimator;
+        topAnimator = PlayerManager.instance.topAnimator;
+        bottomAnimator = PlayerManager.instance.bottomAnimator;
 
     }
 
@@ -72,40 +83,29 @@ public class Player : Entity
         base.Update();
 
         stateMachine.currentState.Update();
+        
+        CheckForDashInput();
+    }
+
+    private void CheckForDashInput()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl) && SkillManager.instance.dash.CanUseSkill())
+        {
+            // only allow to dash in air once
+            if (!IsGroundDetected() && airDashCount >= 1)
+                return;
+
+            dashDir = Input.GetAxisRaw("Horizontal");
+
+            if(dashDir == 0)
+                dashDir = facingDir;
+            if (!IsGroundDetected())
+                airDashCount += 1;
+            stateMachine.ChangeState(dashState);
+        }
     }
 
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
-    /// <summary>
-    /// Returns an array of colliders within a specified circle, filtered by the player's facing direction.
-    /// </summary>
-    /// <param name="position">The center position of the circle.</param>
-    /// <param name="radius">The radius of the circle.</param>
-    /// <param name="facingDir">
-    /// The direction the player is facing:
-    /// <list type="bullet">
-    /// <item><description>1 for right</description></item>
-    /// <item><description>-1 for left</description></item>
-    /// </list>
-    /// </param>
-    /// <returns>An array of colliders within the specified half of the circle based on the facing direction.</returns>
-    public Collider2D[] GetFilteredColliders(Vector2 position, float radius, int facingDir)
-    {
-        Collider2D[] allColliders = Physics2D.OverlapCircleAll(position, radius);
-        List<Collider2D> filteredColliders = new List<Collider2D>();
-
-        foreach (Collider2D collider in allColliders)
-        {
-            float relativeX = collider.transform.position.x - position.x;
-
-            // Filter based on the facing direction
-            if ((facingDir == -1 && relativeX <= 0) ||  // Left half if facing left
-                (facingDir == 1 && relativeX >= 0))     // Right half if facing right
-            {
-                filteredColliders.Add(collider);
-            }
-        }
-
-        return filteredColliders.ToArray();
-    }
+    
 }

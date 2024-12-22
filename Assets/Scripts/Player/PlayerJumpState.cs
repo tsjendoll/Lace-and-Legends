@@ -12,6 +12,7 @@ public class PlayerJumpState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        player.jumpCount += 1;
         player.coyoteTime = false;
         rb.velocity = new Vector2(rb.velocity.x, player.jumpForce);
     }
@@ -27,9 +28,8 @@ public class PlayerJumpState : PlayerState
         if (rb.velocity.y < 0)
             stateMachine.ChangeState(player.airState);
 
-        if (player.doubleJump && Input.GetKeyDown(KeyCode.Space))
+        if (player.jumpCount < 2 && Input.GetKeyDown(KeyCode.Space))
         {
-            player.doubleJump = false;
             stateMachine.ChangeState(player.jumpState);
         }
         

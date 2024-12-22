@@ -13,7 +13,7 @@ public class EnemySkeletonAnimationTriggers : MonoBehaviour
 
     private void AttackTrigger()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(enemy.attachCheck.position, enemy.attackCheckRadius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(enemy.attackCheck.position, enemy.attackCheckRadius);
 
         foreach(var hit in colliders)
         {

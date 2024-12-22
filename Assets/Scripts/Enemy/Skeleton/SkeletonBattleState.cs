@@ -23,7 +23,7 @@ public class SkeletonBattleState : EnemyState
     {
         base.Enter();
 
-        player = GameObject.Find("Player").transform;
+        player = PlayerManager.instance.player.transform;
 
         // Disable collision between Enemy and Boundary layers
         Physics2D.IgnoreLayerCollision(enemyLayer, boundaryLayer, true);

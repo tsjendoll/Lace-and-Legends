@@ -28,9 +28,8 @@ public class PlayerAirState : PlayerState
             stateMachine.ChangeState(player.jumpState);
         }
 
-        if (player.doubleJump && Input.GetKeyDown(KeyCode.Space))
+        if (player.jumpCount < 2 && Input.GetKeyDown(KeyCode.Space))
         {
-            player.doubleJump = false;
             stateMachine.ChangeState(player.jumpState);
         }
            

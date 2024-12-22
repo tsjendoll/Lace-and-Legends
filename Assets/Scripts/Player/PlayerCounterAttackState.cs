@@ -27,7 +27,7 @@ public class PlayerCounterAttackState : PlayerState
 
         player.setZeroVelocity();
 
-        Collider2D[] colliders = player.GetFilteredColliders(player.attachCheck.position, player.attackCheckRadius, player.facingDir);
+        Collider2D[] colliders = Helpers.GetFilteredColliders(player.attackCheck.position, player.attackCheckRadius, player.facingDir);
 
         foreach(var hit in colliders)
         {
