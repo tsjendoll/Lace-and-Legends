@@ -27,6 +27,7 @@ public class PlayerGroundedState : PlayerState
         
         if (player.IsGroundDetected())
         {
+            player.SetVelocity(rb.velocity.x, 0);
             player.airDashCount = 0;
             player.jumpCount = 0;
         }
@@ -44,6 +45,9 @@ public class PlayerGroundedState : PlayerState
         if (!player.IsGroundDetected())
             stateMachine.ChangeState(player.airState);
 
+        if (Input.GetKeyDown(KeyCode.Mouse1) && HasNoSword())
+            stateMachine.ChangeState(player.aimSwordState);
+            
         if (Input.GetKeyDown(KeyCode.Q))
             stateMachine.ChangeState(player.counterAttackState);
 
@@ -58,6 +62,21 @@ public class PlayerGroundedState : PlayerState
         {
             SwitchClothingAnimation();
         }
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            player.hairAnimator.GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+
+    private bool HasNoSword()
+    {
+        if (!player.sword)
+            return true;
+        
+        
+        player.sword.GetComponent<Sword_Skill_Controller>().ReturnSword();
+        return false;
     }
 
     private void SwitchClothingAnimation()

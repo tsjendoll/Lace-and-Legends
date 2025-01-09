@@ -92,7 +92,6 @@ public class Clone_Skill_Controller : MonoBehaviour
         {
             if (hit.GetComponent<Enemy>() != null)
             {
-                Debug.Log("ENEMY detected");
                 float distanceToEnemy = Vector2.Distance(transform.position, hit.transform.position);
                 if (distanceToEnemy < closestTargetDistance)
                 {

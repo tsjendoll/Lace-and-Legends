@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     public Animator playerAnimator;
     public Animator topAnimator;
     public Animator bottomAnimator;
+    public Animator hairAnimator;
 
     
 

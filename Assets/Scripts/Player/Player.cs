@@ -17,9 +17,10 @@ public class Player : Entity
     public float jumpForce;
     public bool coyoteTime = true;
     public float coyoteTimeDuration;
+    public bool floatWithSkirt;
 
-    public int jumpCount = 0;
-    public int airDashCount = 0;
+    [HideInInspector] public int jumpCount = 0;
+    [HideInInspector] public int airDashCount = 0;
 
     [Header("Dash Info")]
     public float dashDuration;
@@ -29,12 +30,14 @@ public class Player : Entity
     [Header("Clothing Info")]
     public bool IsCorsetActive = true;
 
+    public GameObject sword { get; private set; }
+
     #region Components
     public SkillManager skill { get; private set; }
     public Animator playerAnimator {get; private set; }
     public Animator topAnimator {get; private set; }
     public Animator bottomAnimator {get; private set; }
-
+    public Animator hairAnimator {get; private set; }
     #endregion
 
     #region States
@@ -47,8 +50,12 @@ public class Player : Entity
     public PlayerDashState dashState { get; private set; }
     public PlayerAttackState attackState {get; private set; }
     public PlayerCounterAttackState counterAttackState { get; private set; }
-
+    public PlayerAimSwordState aimSwordState { get; private set; }
+    public PlayerCatchSwordState catchSwordState { get; private set; }
     #endregion
+
+    [SerializeField] private CameraFollowObject cameraFollowObject;
+    private float _fallSpeedYDampingChangeThreshold;
 
     protected override void Awake()
     {
@@ -62,8 +69,12 @@ public class Player : Entity
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
         airState = new PlayerAirState(this, stateMachine, "Jump");
         dashState = new PlayerDashState(this, stateMachine, "Run");
+
         attackState = new PlayerAttackState(this, stateMachine, "Attack");
         counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
+
+        aimSwordState = new PlayerAimSwordState(this, stateMachine, "AimSword");
+        catchSwordState = new PlayerCatchSwordState(this, stateMachine, "CatchSword");
     }
 
     protected override void Start()
@@ -71,11 +82,15 @@ public class Player : Entity
         base.Start();
 
         stateMachine.Initialize(idleState);
+
         skill = SkillManager.instance;
+        
         playerAnimator = PlayerManager.instance.playerAnimator;
         topAnimator = PlayerManager.instance.topAnimator;
         bottomAnimator = PlayerManager.instance.bottomAnimator;
+        hairAnimator = PlayerManager.instance.hairAnimator;
 
+        _fallSpeedYDampingChangeThreshold = CameraManager.instance._fallSpeedYDampingChangeThreshold;
     }
 
     protected override void Update()
@@ -85,6 +100,33 @@ public class Player : Entity
         stateMachine.currentState.Update();
         
         CheckForDashInput();
+
+        //if we are falling past a certain speed threshold and lerping is not currently already running
+        if (rb.velocity.y < _fallSpeedYDampingChangeThreshold && !CameraManager.instance.IsLerpingYDamping && !CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpYDamping(true);
+        }
+        //if we are standing still or moving up
+        if (rb.velocity.y >= 0f && !CameraManager.instance.IsLerpingYDamping && CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            // reset so is can be called again
+            CameraManager.instance.LerpedFromPlayerFalling = false;
+
+            CameraManager.instance.LerpYDamping(false);
+        }
+    }
+
+    public void AssignNewSword(GameObject _newSword)
+    {
+        if (sword != null)
+            Destroy(sword);
+        sword = _newSword;
+    }
+        
+    public void CatchSword()
+    {        
+        stateMachine.ChangeState(catchSwordState);
+        Destroy(sword);
     }
 
     private void CheckForDashInput()
@@ -107,5 +149,11 @@ public class Player : Entity
 
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
-    
+    public override void Flip()
+    {
+        base.Flip();
+        cameraFollowObject.CallTurn();
+    }
+
+
 }
