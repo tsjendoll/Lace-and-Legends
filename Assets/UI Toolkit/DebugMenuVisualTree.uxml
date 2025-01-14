@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=d4458ca99f610dc4b8b8bbe19f3823c7&amp;type=3#MainMenuStyle" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.52);">
+        <ui:Label tabindex="-1" text="Debug Menu" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" class="header" style="align-self: center;" />
+        <ui:Toggle label="Debug Mode" name="DebugModeToggle" class="label toggle" />
+        <ui:VisualElement name="EnemySettingsContainer">
+            <ui:Label tabindex="-1" text="Enemy Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EnemySettingsHeader" class="subTitle" style="align-self: center;" />
+            <ui:Toggle label="Freeze Enemies" name="FreezeEnemiesToggle" class="toggle" />
+            <ui:Label tabindex="-1" text="Player Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PlayerSettingsHeader" class="subTitle" />
+            <ui:Toggle label="Free Player Movement" name="FreePlayerMovementToggle" class="toggle" />
+            <ui:Label tabindex="-1" text="Game Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameSettingsHeader" class="subTitle" />
+            <ui:Slider label="Game Speed" high-value="200" low-value="50" show-input-field="true" name="GameSpeedSlider" class="slider toggle" style="width: 50%; align-self: center; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 0); color: rgb(255, 255, 255); text-shadow: 0 0 0 rgba(255, 255, 255, 0); visibility: visible;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

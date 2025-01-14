@@ -1,0 +1,25 @@
+.header {
+    font-size: 48px;
+    color: rgb(255, 255, 255);
+    align-self: center;
+}
+
+.toggle {
+    font-size: 20px;
+    -unity-text-align: upper-center;
+    justify-content: flex-start;
+    align-items: center;
+    align-self: center;
+    color: rgb(255, 255, 255);
+}
+
+.subTitle {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+    align-self: center;
+}
+
+.slider {
+    color: rgb(255, 255, 255);
+    background-color: rgba(183, 58, 58, 0);
+}

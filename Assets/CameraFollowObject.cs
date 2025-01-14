@@ -10,8 +10,6 @@ public class CameraFollowObject : MonoBehaviour
     [Header("Flip Rotation Stats")]
     [SerializeField] private float _flipRotationTime = 0.5f;
 
-    private Coroutine _turnCoroutine;
-
     private Player _player;
     private bool _isFacingRight;
 

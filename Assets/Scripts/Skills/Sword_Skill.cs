@@ -1,3 +1,8 @@
+using System;
+using System.CodeDom.Compiler;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public enum SwordType
@@ -33,10 +38,8 @@ public class Sword_Skill : Skill
     [Header("Spin Info")]
     [SerializeField, Tooltip("How often the sword can hit enemies.")]
     private float hitCooldown = .33f;
-    
     [SerializeField, Tooltip("The distance the sword should travel away from player before stopping in place")]
     private float maxTravelDistance = 7;
-
     [SerializeField, Tooltip("The amount of time the sword should remain spinning before is returns to player")]
     private float spinDuration;
     [SerializeField, Tooltip("The gravity effect applied when the sword is in spinning mode.")]
@@ -45,7 +48,7 @@ public class Sword_Skill : Skill
     [Header("Skill Info")]
     [SerializeField, Tooltip("The prefab used to instantiate the sword object.")]
     private GameObject swordPrefab;
-    
+
     [SerializeField, Tooltip("The speed at which the sword will return to player when called back.")]
     private float returnSpeed;
 
@@ -76,9 +79,6 @@ public class Sword_Skill : Skill
     private bool areDotsActive;
     private float swordGravity;
 
-    /// <summary>
-    /// Initializes the skill and sets up gravity and trajectory dots.
-    /// </summary>
     protected override void Start()
     {
         base.Start();
@@ -89,9 +89,6 @@ public class Sword_Skill : Skill
 
     }
 
-    /// <summary>
-    /// Sets up the sword gravity based on the sword type.
-    /// </summary>
     private void SetupGravity()
     {
         if (swordType == SwordType.Bounce)
@@ -104,9 +101,6 @@ public class Sword_Skill : Skill
             swordGravity = defaultSwordGravity;
     }
 
-    /// <summary>
-    /// Updates the skill state every frame.
-    /// </summary>
     protected override void Update()
     {
         if (Input.GetKeyUp(KeyCode.Mouse1))
@@ -123,9 +117,6 @@ public class Sword_Skill : Skill
         }
     }
 
-    /// <summary>
-    /// Creates the sword and sets up its behavior based on the sword type.
-    /// </summary>
     public void CreateSword()
     {
         GameObject newSword = Instantiate(swordPrefab, player.transform.position, transform.rotation);
@@ -148,10 +139,6 @@ public class Sword_Skill : Skill
     }
 
     #region Aim Region
-    /// <summary>
-    /// Calculates the direction from the player to the mouse position.
-    /// </summary>
-    /// <returns>The direction vector.</returns>
     public Vector2 AimDirection()
     {
         Vector2 playerPosition = player.transform.position;
@@ -161,10 +148,6 @@ public class Sword_Skill : Skill
         return direction;
     }
 
-    /// <summary>
-    /// Activates or deactivates the trajectory dots.
-    /// </summary>
-    /// <param name="_isActive">Whether the dots should be active.</param>
     public void DotsActive(bool _isActive)
     {
         areDotsActive = _isActive;
@@ -174,9 +157,6 @@ public class Sword_Skill : Skill
         }
     }
 
-    /// <summary>
-    /// Generates the trajectory dots.
-    /// </summary>
     private void GenerateDots()
     {
         dots = new GameObject[numberOfDots];
@@ -188,11 +168,6 @@ public class Sword_Skill : Skill
         }
     }
 
-    /// <summary>
-    /// Calculates the position of a dot at a given time.
-    /// </summary>
-    /// <param name="t">The time parameter.</param>
-    /// <returns>The position vector.</returns>
     private Vector2 DotsPosition(float t)
     {
         Vector2 position = (Vector2)player.transform.position + new Vector2(

@@ -47,13 +47,13 @@ public class SkeletonBattleState : EnemyState
         }
         else
         {
-
             if (stateTimer < 0 || Vector2.Distance(enemy.transform.position, player.position) > 10)
+            {
                 stateMachine.ChangeState(enemy.idleState);
+            }
         }
 
         if(enemy.IsPlayerDetected().distance > enemy.attackDistance || !enemy.IsPlayerDetected())
-
             MoveTowardsPlayer();
 
     }

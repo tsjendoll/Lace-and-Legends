@@ -15,8 +15,9 @@ public class Clone_Skill : Skill
 
     private Regex regex = new Regex(@"Female(.*?)_AC");
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         cloneACS.Add(Resources.Load<RuntimeAnimatorController>("Animation/Controllers/Clone/CloneBoots_AC"));
         cloneACS.Add(Resources.Load<RuntimeAnimatorController>("Animation/Controllers/Clone/CloneCorset_AC"));
         cloneACS.Add(Resources.Load<RuntimeAnimatorController>("Animation/Controllers/Clone/CloneHair_AC"));
@@ -89,9 +90,6 @@ public class Clone_Skill : Skill
                         break;
                 }
             }
-                        
-            // Debug.Log($"Animator {i} controller synced for {cloneAnimators[i].gameObject.name}.");
-
         }
 
         AnimatorStateInfo parentStateInfo = cloneAnimators[0].GetCurrentAnimatorStateInfo(0);
